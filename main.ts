@@ -45,7 +45,10 @@ basic.forever(function () {
 })
 
 input.onLogoEvent(TouchButtonEvent.Touched, () => {
-    //basic.clearScreen();
-    game.createSprite(2, 2)
+    basic.clearScreen();
+    //game.createSprite(2, 2)
 
+})
+input.onButtonPressed(Button.B, () => {
+    //game.createSprite(center_sprite.x, Dimension.Y)
 })
