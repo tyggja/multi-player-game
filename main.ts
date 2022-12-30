@@ -3,18 +3,33 @@
 let current_x = 2;
 let current_y = 2;
 
-// Create a sprite at position x:2, y:2 (center)
-let moving_led = game.createSprite(current_x, current_y)
-moving_led.off()
+
 
 input.onButtonPressed(Button.AB, () => {
+
+    // Create a sprite at position x:2, y:2 (center)
+    let moving_led = game.createSprite(current_x, current_y)
+    moving_led.off()
+
     basic.clearScreen()
+    music.playSoundEffect(
+        music.builtinSoundEffect(soundExpression.spring), SoundExpressionPlayMode.InBackground)
+    basic.showAnimation(`
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. .#. . . .#. . . .#. . . .#. . . .#. . . .#. .
+.#.#. .# # #. .#.#. .# # #. .#.#. .# # #.
+. .#. . . .#. . . .#. . . .#. . . .#. . . .#. .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+`, 500)
+    
     pause(500)
     moving_led.on()
+    moving_led.setBlink(300)
     pause(500)
 
     // The (B) button controlls the X axis
     input.onButtonPressed(Button.B, () => {
+        music.playTone(Note.C5, 50)
         if (current_x >= 4) {
             
             // Reset the X counter
@@ -33,6 +48,7 @@ input.onButtonPressed(Button.AB, () => {
 
     // The (A) button controlls the Y axis
     input.onButtonPressed(Button.A, () => {
+        music.playTone(Note.B5, 50)
         if (current_y >= 4) {
             
             // Reset the Y counter
