@@ -5,6 +5,9 @@ let current_y = 0
 // Number of LED selections a player can make 
 let slec_number = 3
 
+// Array that holds all the LED selections
+let sel_array: string[] = []
+
 // Set joystick pins &  variables
 pins.analogReadPin(AnalogPin.P0)
 pins.analogReadPin(AnalogPin.P1)
@@ -103,6 +106,8 @@ input.onButtonPressed(Button.AB, () => {
 
             if (slec_number != 0) {
                 let led_sel = game.createSprite(current_x, current_y)
+                let vtp = new Led(3, 3)
+                sel_array.push(JSON.stringify(vtp))
                 slec_number--
             } else {
                 //TODO: Show error animation
@@ -113,8 +118,35 @@ input.onButtonPressed(Button.AB, () => {
             // BLT to another 'player'
             //----------------------------------------------
 
-            serial.writeLine("x:" + current_x + " y:" + current_y)
-            serial.writeLine("selec_num: " + slec_number)
+            //serial.writeLine("x:" + current_x + " y:" + current_y)
+            //serial.writeLine("selec_num: " + slec_number)
+            // for (let i = 0; i < sel_array.length; i++) {
+            //     //let temp = JSON.parse(sel_array[i])
+            //     //serial.writeLine("x:" + temp.get_x + "y:" + temp.get_y)
+            //     serial.writeLine(sel_array.)
+            //     serial.writeLine("-------------------------------------")
+            // }
+            // serial.writeLine("sel_array: " + sel_array.length)
+            sel_array.forEach((t_ar) => {
+                serial.writeLine(t_ar)
+            })
         }
     })
 })
+
+// Class for LED
+class Led {
+    private x_val: number
+    private y_val: number
+
+    constructor(x_val: number, y_val: number) {
+        this.x_val = x_val
+        this.y_val = y_val
+    }
+    public get_x() {
+        return this.x_val
+    }
+    public get_y() {
+        return this.y_val
+    }
+}
