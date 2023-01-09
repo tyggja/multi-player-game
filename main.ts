@@ -102,7 +102,6 @@ input.onButtonPressed(Button.AB, () => {
         // Joystick is pressed (0 is pressed)
         if (!sw) {
             pause(400)
-            music.playMelody("D5 G5", 700)
             //TODO: ----------------------------------------
             // Check if the current selection overlaps
             // if this position has already been selected, toggle
@@ -116,11 +115,17 @@ input.onButtonPressed(Button.AB, () => {
 
             if (slec_number != 0) {
                 let led_sel = game.createSprite(current_x, current_y)
+                music.playMelody("D5 G5", 800)
                 let vtp = new Led(3, 3)
                 sel_array.push(vtp)
                 slec_number--
             } else {
                 //TODO: Show error animation
+                basic.clearScreen()
+                basic.showIcon(IconNames.No)
+                basic.pause(300)
+                music.playMelody("G5 D5", 500)
+                
             }
 
             //TODO: ----------------------------------------
@@ -142,6 +147,11 @@ input.onButtonPressed(Button.AB, () => {
             })
             //console.log(sel_array)
         }
+
+        // Logo is pressed (BLT construct)
+        if(input.logoIsPressed()) {
+
+        }
     })
 })
 
@@ -160,4 +170,9 @@ class Led {
     public get_y() {
         return this.y_val
     }
+}
+
+function blt_connect() {
+    // Set the BLT group
+    radio.setGroup(128)
 }
