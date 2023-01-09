@@ -6,7 +6,7 @@ let current_y = 0
 let slec_number = 3
 
 // Array that holds all the LED selections
-let sel_array: string[] = []
+let sel_array: Led[] = []
 
 // Set joystick pins &  variables
 pins.analogReadPin(AnalogPin.P0)
@@ -32,13 +32,18 @@ input.onButtonPressed(Button.AB, () => {
         moving_led.delete()
     }
 
+    // Create sound effects
+    let jss = music.createSoundEffect(WaveShape.Square, 1, 2419, 255, 138, 100, 
+                SoundExpressionEffect.Warble, InterpolationCurve.Linear)
+    let sls = music.createSoundEffect(WaveShape.Sine, 2909, 635, 255, 129, 200, SoundExpressionEffect.None, InterpolationCurve.Linear)
+
     // Create a sprite at position x:2, y:2 (center)
     moving_led = game.createSprite(current_x, current_y)
     moving_led.off()
 
     basic.clearScreen()
-    // music.playSoundEffect(
-    //     music.builtinSoundEffect(soundExpression.spring), SoundExpressionPlayMode.InBackground)
+    music.playSoundEffect(
+        music.builtinSoundEffect(soundExpression.spring), SoundExpressionPlayMode.InBackground)
     basic.showAnimation(`
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 . .#. . . .#. . . .#. . . .#. . . .#. . . .#. .
@@ -62,6 +67,7 @@ input.onButtonPressed(Button.AB, () => {
         if (val_x == 0) {
             pause(300)
             moving_led.changeYBy(-1)
+            music.playSoundEffect(jss, SoundExpressionPlayMode.InBackground)
             current_y--
             pause(300)
         }
@@ -70,6 +76,7 @@ input.onButtonPressed(Button.AB, () => {
         if (val_x > 1020) {
             pause(300)
             moving_led.changeYBy(1)
+            music.playSoundEffect(jss, SoundExpressionPlayMode.InBackground)
             current_y++
             pause(300)
         }
@@ -78,6 +85,7 @@ input.onButtonPressed(Button.AB, () => {
         if (val_y > 1020) {
             pause(300)
             moving_led.changeXBy(-1)
+            music.playSoundEffect(jss, SoundExpressionPlayMode.InBackground)
             current_x--
             pause(300)
         }
@@ -86,6 +94,7 @@ input.onButtonPressed(Button.AB, () => {
         if (val_y == 0) {
             pause(300)
             moving_led.changeXBy(1)
+            music.playSoundEffect(jss, SoundExpressionPlayMode.InBackground)
             current_x++
             pause(300)
         }
@@ -93,6 +102,7 @@ input.onButtonPressed(Button.AB, () => {
         // Joystick is pressed (0 is pressed)
         if (!sw) {
             pause(400)
+            music.playMelody("D5 G5", 700)
             //TODO: ----------------------------------------
             // Check if the current selection overlaps
             // if this position has already been selected, toggle
@@ -107,7 +117,7 @@ input.onButtonPressed(Button.AB, () => {
             if (slec_number != 0) {
                 let led_sel = game.createSprite(current_x, current_y)
                 let vtp = new Led(3, 3)
-                sel_array.push(JSON.stringify(vtp))
+                sel_array.push(vtp)
                 slec_number--
             } else {
                 //TODO: Show error animation
@@ -127,9 +137,10 @@ input.onButtonPressed(Button.AB, () => {
             //     serial.writeLine("-------------------------------------")
             // }
             // serial.writeLine("sel_array: " + sel_array.length)
-            sel_array.forEach((t_ar) => {
-                serial.writeLine(t_ar)
+            sel_array.forEach(function(t_ar) {
+                serial.writeLine(JSON.stringify(t_ar))
             })
+            //console.log(sel_array)
         }
     })
 })
