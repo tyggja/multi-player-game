@@ -32,10 +32,13 @@ input.onButtonPressed(Button.AB, () => {
         moving_led.delete()
     }
 
+    // Clean the led array with each A+B button-press
+
     // Create sound effects
-    let jss = music.createSoundEffect(WaveShape.Square, 1, 2419, 255, 138, 100, 
-                SoundExpressionEffect.Warble, InterpolationCurve.Linear)
-    let sls = music.createSoundEffect(WaveShape.Sine, 2909, 635, 255, 129, 200, SoundExpressionEffect.None, InterpolationCurve.Linear)
+    // let jss = music.createSoundEffect(WaveShape.Square, 1, 2419, 255, 138, 100, 
+    //             SoundExpressionEffect.Warble, InterpolationCurve.Linear)
+    // let sls = music.createSoundEffect(WaveShape.Sine, 2909, 635, 255, 129, 200, 
+    //             SoundExpressionEffect.None, InterpolationCurve.Linear)
 
     // Create a sprite at position x:2, y:2 (center)
     moving_led = game.createSprite(current_x, current_y)
@@ -67,7 +70,7 @@ input.onButtonPressed(Button.AB, () => {
         if (val_x == 0) {
             pause(300)
             moving_led.changeYBy(-1)
-            music.playSoundEffect(jss, SoundExpressionPlayMode.InBackground)
+            //music.playSoundEffect(jss, SoundExpressionPlayMode.InBackground)
             current_y--
             pause(300)
         }
@@ -76,7 +79,7 @@ input.onButtonPressed(Button.AB, () => {
         if (val_x > 1020) {
             pause(300)
             moving_led.changeYBy(1)
-            music.playSoundEffect(jss, SoundExpressionPlayMode.InBackground)
+            //music.playSoundEffect(jss, SoundExpressionPlayMode.InBackground)
             current_y++
             pause(300)
         }
@@ -85,7 +88,7 @@ input.onButtonPressed(Button.AB, () => {
         if (val_y > 1020) {
             pause(300)
             moving_led.changeXBy(-1)
-            music.playSoundEffect(jss, SoundExpressionPlayMode.InBackground)
+            //music.playSoundEffect(jss, SoundExpressionPlayMode.InBackground)
             current_x--
             pause(300)
         }
@@ -94,7 +97,7 @@ input.onButtonPressed(Button.AB, () => {
         if (val_y == 0) {
             pause(300)
             moving_led.changeXBy(1)
-            music.playSoundEffect(jss, SoundExpressionPlayMode.InBackground)
+            //music.playSoundEffect(jss, SoundExpressionPlayMode.InBackground)
             current_x++
             pause(300)
         }
@@ -107,50 +110,26 @@ input.onButtonPressed(Button.AB, () => {
             // if this position has already been selected, toggle
             // else create new one sprite
             //----------------------------------------------
-
-            //TODO: ----------------------------------------
-            // Give the user only 3 dots/selections to make,
-            // after each selection show a brief animation with the decreasing
-            // number of left LED(s) available to select: "2, 1, Error/X"
-
-            if (slec_number != 0) {
+            if (slec_number > 0) {
                 let led_sel = game.createSprite(current_x, current_y)
                 music.playMelody("D5 G5", 800)
                 let vtp = new Led(3, 3)
                 sel_array.push(vtp)
                 slec_number--
             } else {
-                //TODO: Show error animation
-                basic.clearScreen()
+                music.playMelody("G5 D5", 500)
                 basic.showIcon(IconNames.No)
                 basic.pause(300)
-                music.playMelody("G5 D5", 500)
-                
             }
-
-            //TODO: ----------------------------------------
-            // Add newly created LED/sprite to an array to latter send over
-            // BLT to another 'player'
-            //----------------------------------------------
-
-            //serial.writeLine("x:" + current_x + " y:" + current_y)
-            //serial.writeLine("selec_num: " + slec_number)
-            // for (let i = 0; i < sel_array.length; i++) {
-            //     //let temp = JSON.parse(sel_array[i])
-            //     //serial.writeLine("x:" + temp.get_x + "y:" + temp.get_y)
-            //     serial.writeLine(sel_array.)
-            //     serial.writeLine("-------------------------------------")
-            // }
-            // serial.writeLine("sel_array: " + sel_array.length)
             sel_array.forEach(function(t_ar) {
                 serial.writeLine(JSON.stringify(t_ar))
             })
-            //console.log(sel_array)
         }
 
         // Logo is pressed (BLT construct)
         if(input.logoIsPressed()) {
-
+            // Set the BLT group
+            radio.setGroup(128)
         }
     })
 })
@@ -170,9 +149,4 @@ class Led {
     public get_y() {
         return this.y_val
     }
-}
-
-function blt_connect() {
-    // Set the BLT group
-    radio.setGroup(128)
 }
